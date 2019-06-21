@@ -1,11 +1,14 @@
 import React, { useState, useEffect } from 'react'
 import services from './services';
+import Notification from './Notification';
 
 const App = () => {
     const [persons, setPersons] = useState([])
     const [newName, setNewName] = useState('')
     const [newNumber, setNewNumber] = useState('')
     const [filter, setFilter] = useState('')
+    const [notificationMessage, setNotificationMessage] = useState('')
+    const [notifStatus, setNotifStatus] = useState('')
 
     const handleChange = (e) => {
         setNewName(e.target.value);
@@ -31,6 +34,10 @@ const App = () => {
                     .then(changedPerson => {
                         setPersons(persons.map(person => (person.id === changedPerson.id) ? changedPerson : person ))
                     })
+                    .catch((error) => {
+                        console.log(error)
+                        setNotif(`${newPerson.name} has already been deleted from the phonebook`, 'error')
+                    })
             }
         } else if (persons.some((person) => person.number === newNumber)) {
             alert(`${newNumber} is already in the phone book`)
@@ -41,8 +48,17 @@ const App = () => {
                     setPersons(persons.concat(person))
                     setNewName('')
                     setNewNumber('')
+                    setNotif(`Added ${person.name}`, 'ok')
                 })
         }
+    }
+
+    const setNotif = (message, status) => {
+        setNotificationMessage(message)
+        setNotifStatus(status)
+        setTimeout(() => {
+            setNotificationMessage(null)
+        }, 5000)
     }
 
     useEffect(() => {
@@ -66,6 +82,7 @@ const App = () => {
     return (
         <div>
             <h2>Phonebook</h2>
+            <Notification message={notificationMessage} status={notifStatus}/>
             <Filter filter={filter} handleFilterChange={handleFilterChange} />
             <h3>Add a new</h3>
             <Form handleSubmit={handleSubmit} handleChange={handleChange}

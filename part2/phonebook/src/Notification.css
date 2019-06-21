@@ -1,0 +1,12 @@
+.notification p {
+    border-top: 2px;
+    border-bottom: 2px;
+}
+
+.ok {
+    border-color: green;
+}
+
+.error {
+    border-color: red;
+}
