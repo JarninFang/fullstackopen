@@ -3,10 +3,10 @@
     border-bottom: 2px;
 }
 
-.ok {
-    border-color: green;
+.notification .ok {
+    background-color: green;
 }
 
-.error {
-    border-color: red;
+.notification .error {
+    background-color: red;
 }
