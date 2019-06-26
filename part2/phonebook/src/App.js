@@ -117,7 +117,10 @@ const Form = (props) => {
 }
 
 const Persons = ({ persons, filter, onDelete }) => {
-    const personsToShow = persons.filter(person => person.name.toLowerCase().indexOf(filter) !== -1);
+    const personsToShow = persons.filter(person => {
+        const name = String(person.name)
+        return name.toLowerCase().indexOf(filter) !== -1;
+    })
     return (
         <div>
             {personsToShow.map(person => 

@@ -1,8 +1,15 @@
 const express = require('express')
 const app = express()
 const bodyParser = require('body-parser')
-
+//const morgan = require('morgan')
+const cors = require('cors')
+app.use(cors())
 app.use(bodyParser.json())
+app.use(express.static('build'))
+
+//const loggerFormat = ':method :url :status - :response-time ms :res[body]'
+//app.use(morgan(loggerFormat))
+
 
 let persons = [
     {
@@ -74,9 +81,24 @@ app.post('/api/persons', (req, res) => {
     }
 
     persons = persons.concat(newPerson)
-    res.status(204).end()
+    console.log(newPerson)
+    res.json(newPerson)
+})
+app.put('/api/persons/:id', (req, res) => {
+    const body = req.body;
+
+    const updatedPerson = {
+        name: body.name,
+        number: body.number,
+        date: new Date(),
+        id: req.params.id
+    }
+
+    persons = persons.map(person => (person.id === updatedPerson.id) ? updatedPerson: person)
+    res.json(updatedPerson)
 })
 
-app.listen(3001, () => {
-    console.log('Server listening on port 3001')
+const PORT = process.env.PORT || 3001
+app.listen(PORT, () => {
+    console.log('Server listening on port ', PORT)
 })
