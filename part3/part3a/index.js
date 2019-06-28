@@ -7,6 +7,27 @@ const app = express()
 app.use(cors())
 app.use(bodyParser.json())
 
+const mongoose = require('mongoose')
+
+const url = `mongodb+srv://fullstack:fullstack@fullstack-l7wpv.mongodb.net/note-app?retryWrites=true&w=majority`
+
+mongoose.connect(url, { useNewUrlParser: true })
+
+const noteSchema = new mongoose.Schema({
+    content: String,
+    date: Date,
+    important: Boolean,
+})
+
+noteSchema.set('toJSON', {
+    transform: (document, returnedObject) => {
+        returnedObject.id = returnedObject._id.toString()
+        delete returnedObject._id
+        delete returnedObject.__v
+    }
+})
+const Note = mongoose.model('Note', noteSchema)
+
 let notes = [
     {
         id: 1,
@@ -33,7 +54,9 @@ app.get('/', (req, res) => {
 })
 
 app.get('/notes', (req, res) => {
-    res.json(notes)
+    Note.find({}).then(notes => {
+        res.json(notes.map(note => note.toJSON()))
+    })
 })
 
 app.get('/notes/:id', (request, response) => {
