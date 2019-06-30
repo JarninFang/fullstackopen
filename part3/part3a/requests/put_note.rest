@@ -1,0 +1,7 @@
+PUT http://localhost:3001/notes/5d13bbbe9819475bc6520838
+content-type: application/json
+
+{
+    "content": "test content",
+    "important": "false"
+}
